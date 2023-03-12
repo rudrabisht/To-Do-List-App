@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb+srv://admin-rudra:rudy123@todolistcluster.skdegtf.mongodb.net/todolistDB",{ useNewUrlParser: true});
+mongoose.connect("mongodb+srv://admin-rudra:rudy123@clusterzero.ofyudqe.mongodb.net/todolistDB",{ useNewUrlParser: true});
 
 const itemsSchema = new mongoose.Schema({
     name: String
@@ -120,8 +120,8 @@ app.post("/delete", function(req, res){
         List.findOne({name: listName}).then((foundList) => {
             foundList.items.pull(checkedItemId);
             foundList.save();
+            res.redirect("/" + listName);
         }).catch((err) => {console.log(err)});
-        res.redirect("/" + listName);
     }
 });
 
