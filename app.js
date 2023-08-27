@@ -66,23 +66,27 @@ app.get("/", function(req, res){
 app.get("/:customListName", function(req, res){
     const customListName = _.capitalize(req.params.customListName);
 
-    List.findOne({name: customListName}).then((foundList) => {
-        if (foundList) {
-            //Show an exiting list
-            res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
-        } else {
-            //Create a new list
-            const list = new List({
-                name: customListName,
-                items: defaultItems
-            });
-
-            list.save();
-            res.redirect("/" + customListName);
-        }
-    }).catch((err) => {
-        console.log(err);
-    })
+    if(customListName === "About") {
+        res.render("about");
+    } else {
+        List.findOne({name: customListName}).then((foundList) => {
+            if (foundList) {
+                //Show an exiting list
+                res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+            } else {
+                //Create a new list
+                const list = new List({
+                    name: customListName,
+                    items: defaultItems
+                });
+    
+                list.save();
+                res.redirect("/" + customListName);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 })
 
 
@@ -125,11 +129,6 @@ app.post("/delete", function(req, res){
         }).catch((err) => {console.log(err)});
     }
 });
-
-
-app.get("/about", function(req, res){
-    res.render("about");
-})
 
 app.listen(port, function(){
     console.log("Server started on port " + port);
